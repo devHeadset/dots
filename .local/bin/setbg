@@ -1,0 +1,7 @@
+#!/bin/sh
+
+wall=$(find ~/pix/wall   | shuf -n 1)
+
+#set wallpaper
+feh --bg-scale  $wall
+

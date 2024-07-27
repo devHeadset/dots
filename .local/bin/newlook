@@ -1,0 +1,12 @@
+#!/bin/sh
+
+wall=$(find /home/headset/pix/wall   | shuf -n 1)
+
+
+# gen color scheme
+wal -c
+wal -i $wall
+
+#set wallpaper
+xwallpaper --zoom $wall
+

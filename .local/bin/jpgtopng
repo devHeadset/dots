@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# Global variables
+INPUT_DIR="$1"
+OUTPUT_DIR="$2"
+
+# Function to convert jpg to png
+convert_jpg_to_png() {
+    local input_file="$1"
+    local output_file="$2"
+    if ! convert "$input_file" "$output_file"; then
+        printf "Error converting %s to %s\n" "$input_file" "$output_file" >&2
+        return 1
+    fi
+    printf "Successfully converted %s to %s\n" "$input_file" "$output_file"
+}
+
+# Function to process all jpg files in the input directory
+process_directory() {
+    local input_dir="$1"
+    local output_dir="$2"
+    if ! mkdir -p "$output_dir"; then
+        printf "Error creating output directory %s\n" "$output_dir" >&2
+        return 1
+    fi
+
+    local jpg_files
+    if ! jpg_files=$(find "$input_dir" -type f -iname "*.jpg"); then
+        printf "Error finding jpg files in directory %s\n" "$input_dir" >&2
+        return 1
+    fi
+
+    while IFS= read -r jpg_file; do
+        local base_name
+        base_name=$(basename "$jpg_file" .jpg)
+        local png_file="$output_dir/${base_name}.png"
+        if ! convert_jpg_to_png "$jpg_file" "$png_file"; then
+            printf "Failed to convert %s\n" "$jpg_file" >&2
+        fi
+    done <<< "$jpg_files"
+}
+
+# Main function
+main() {
+    if [[ -z "$INPUT_DIR" || -z "$OUTPUT_DIR" ]]; then
+        printf "Usage: %s <input_directory> <output_directory>\n" "$(basename "$0")" >&2
+        return 1
+    fi
+
+    process_directory "$INPUT_DIR" "$OUTPUT_DIR"
+}
+
+main "$@"
+

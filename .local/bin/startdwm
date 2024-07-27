@@ -1,0 +1,7 @@
+# This is for sddm dwm starting.
+/home/headset/.screenlayout/layout.sh
+dwmblocks & 
+mpd-discord-rpc &
+/home/headset/.local/bin/newlook
+xcompmgr &
+exec dwm
